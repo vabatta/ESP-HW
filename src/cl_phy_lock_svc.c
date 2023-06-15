@@ -39,7 +39,7 @@ static esp_err_t save_state(const uint8_t state);
 static uint8_t is_null_uuid(const uint8_t *uuid);
 
 // -- RUNTIME VARIABLES --
-static const char *LOG_TAG = "PHY_LOCK_SVC";
+static const char *LOG_TAG = "physvc_lock";
 
 static uint8_t null_owner[16] = {0};									 //!< 16 null-bytes used to clear the lock ownership
 static uint8_t current_owner[16] = {0};								 //!< The current owner of the lock, 16 null-bytes otherwise

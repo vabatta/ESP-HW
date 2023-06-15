@@ -6,22 +6,22 @@
 #include "nimble/nimble_port_freertos.h"
 #include "host/ble_hs.h"
 #include "host/util/util.h"
-// GATT and GAP
+// Other BT related services
 #include "services/gap/ble_svc_gap.h"
 #include "services/gatt/ble_svc_gatt.h"
 // Local
 #include "cl_ble_svc.h"
 #include "gatts/cl_ble_lock_svc.h"
 
-static const char *LOG_TAG = "BLE";
+static const char *LOG_TAG = "blesvc";
 
 void ble_advertise(void);
 uint8_t own_addr_type;
 
 int ble_gap_event(struct ble_gap_event *event, void *arg)
 {
-	struct ble_gap_conn_desc desc;
-	int ret;
+	// struct ble_gap_conn_desc desc;
+	// int ret;
 
 	switch (event->type)
 	{
@@ -102,7 +102,7 @@ int ble_gap_event(struct ble_gap_event *event, void *arg)
 		return 0;
 
 	default:
-		ESP_LOGI(LOG_TAG, "Unhandled GAP event: %d", event->type);
+		ESP_LOGI(LOG_TAG, "Unhandled GAP event; type=%d", event->type);
 	}
 
 	return 0;
@@ -192,7 +192,7 @@ void ble_on_sync(void)
 		return;
 	}
 
-	ESP_LOGI(LOG_TAG, "Device Address: %s", ADDR_TO_STRING(addr.val));
+	ESP_LOGI(LOG_TAG, "BT device address set; addr=%s", ADDR_TO_STRING(addr.val));
 
 	// Begin advertising after sync
 	ble_advertise();

@@ -3,9 +3,9 @@
 // ESP32
 #include "esp_log.h"
 #include "esp_err.h"
-// Bluetooth includes.
+// Bluetooth
 #include "host/ble_hs.h"
-// Local includes.
+// Local
 #include "uuid_utils.h"
 #include "cl_ble_lock_svc.h"
 #include "cl_phy_lock_svc.h"
@@ -17,7 +17,7 @@ int cl_ble_lock_svc_req_claim_char_cb(uint16_t conn_handle, uint16_t attr_handle
 int cl_ble_lock_svc_req_release_char_cb(uint16_t conn_handle, uint16_t attr_handle, struct ble_gatt_access_ctxt *ctxt, void *arg);
 
 // -- RUNTIME VARIABLES --
-static const char *LOG_TAG = "BLELS";
+static const char *LOG_TAG = "blesvc_lock";
 
 /**
  * Bluetooth LE GATT uuid for the lock/unlock service.
@@ -140,7 +140,7 @@ int cl_ble_lock_svc_req_claim_char_cb(uint16_t conn_handle, uint16_t attr_handle
 
 	if (om_len < (BLE_UUID_STR_LEN - 1) || om_len > BLE_UUID_STR_LEN)
 	{
-		ESP_LOGE(LOG_TAG, "Input mbuf not fitting uuid128 len: %d", om_len);
+		ESP_LOGE(LOG_TAG, "Input mbuf not fitting uuid128 len; len=%d", om_len);
 		return BLE_ATT_ERR_INVALID_ATTR_VALUE_LEN;
 	}
 	// we expect a string uuid in the format of 8-4-4-4-12 null-terminated
@@ -149,7 +149,7 @@ int cl_ble_lock_svc_req_claim_char_cb(uint16_t conn_handle, uint16_t attr_handle
 	ret = ble_hs_mbuf_to_flat(ctxt->om, uuid_str, BLE_UUID_STR_LEN, &len);
 	if (ret != 0)
 	{
-		ESP_LOGE(LOG_TAG, "Failed to convert mbuf to flat: %d", ret);
+		ESP_LOGE(LOG_TAG, "Failed to convert mbuf to flat; ret=%d", ret);
 		return BLE_ATT_ERR_UNLIKELY;
 	}
 	// We add the null-termination if missing
@@ -164,7 +164,7 @@ int cl_ble_lock_svc_req_claim_char_cb(uint16_t conn_handle, uint16_t attr_handle
 	ret = ble_uuid_init_from_buf(&requested_claim_uuid, uuid_bytes, sizeof(uuid_bytes));
 	if (ret != 0)
 	{
-		ESP_LOGE(LOG_TAG, "Failed to init uuid from buf: %d", ret);
+		ESP_LOGE(LOG_TAG, "Failed to init uuid from buf; ret=%d", ret);
 		return BLE_ATT_ERR_UNLIKELY;
 	}
 
@@ -172,11 +172,11 @@ int cl_ble_lock_svc_req_claim_char_cb(uint16_t conn_handle, uint16_t attr_handle
 	ret = cl_phy_lock_svc_request_claim(requested_claim_uuid.u128.value);
 	if (ret != 0)
 	{
-		ESP_LOGE(LOG_TAG, "Failed to request claim: %d", ret);
+		ESP_LOGE(LOG_TAG, "Failed to request claim; ret=%d", ret);
 		return BLE_ATT_ERR_UNLIKELY;
 	}
 
-	ESP_LOGI(LOG_TAG, "Requested claim for %s", uuid_str);
+	ESP_LOGI(LOG_TAG, "Requested claim; uuid=%s", uuid_str);
 
 	return 0;
 }
@@ -189,7 +189,7 @@ int cl_ble_lock_svc_req_release_char_cb(uint16_t conn_handle, uint16_t attr_hand
 	// we accept a uuid not null terminated as we will add it if missing
 	if (om_len < (BLE_UUID_STR_LEN - 1) || om_len > BLE_UUID_STR_LEN)
 	{
-		ESP_LOGE(LOG_TAG, "Input mbuf not fitting uuid128 len: %d", om_len);
+		ESP_LOGE(LOG_TAG, "Input mbuf not fitting uuid128 length; len=%d", om_len);
 		return BLE_ATT_ERR_INVALID_ATTR_VALUE_LEN;
 	}
 	// we expect a string uuid in the format of 8-4-4-4-12 null-terminated
@@ -198,7 +198,7 @@ int cl_ble_lock_svc_req_release_char_cb(uint16_t conn_handle, uint16_t attr_hand
 	ret = ble_hs_mbuf_to_flat(ctxt->om, uuid_str, BLE_UUID_STR_LEN, &len);
 	if (ret != 0)
 	{
-		ESP_LOGE(LOG_TAG, "Failed to convert mbuf to flat: %d", ret);
+		ESP_LOGE(LOG_TAG, "Failed to convert mbuf to flat; ret=%d", ret);
 		return BLE_ATT_ERR_UNLIKELY;
 	}
 	// We add the null-termination if missing
@@ -213,7 +213,7 @@ int cl_ble_lock_svc_req_release_char_cb(uint16_t conn_handle, uint16_t attr_hand
 	ret = ble_uuid_init_from_buf(&requested_release_uuid, uuid_bytes, sizeof(uuid_bytes));
 	if (ret != 0)
 	{
-		ESP_LOGE(LOG_TAG, "Failed to init uuid from buf: %d", ret);
+		ESP_LOGE(LOG_TAG, "Failed to init uuid from buf; ret=%d", ret);
 		return BLE_ATT_ERR_UNLIKELY;
 	}
 
@@ -221,11 +221,11 @@ int cl_ble_lock_svc_req_release_char_cb(uint16_t conn_handle, uint16_t attr_hand
 	ret = cl_phy_lock_svc_request_release(requested_release_uuid.u128.value);
 	if (ret != 0)
 	{
-		ESP_LOGE(LOG_TAG, "Failed to request release: %d", ret);
+		ESP_LOGE(LOG_TAG, "Failed to request release; ret=%d", ret);
 		return BLE_ATT_ERR_UNLIKELY;
 	}
 
-	ESP_LOGI(LOG_TAG, "Requested release for %s", uuid_str);
+	ESP_LOGI(LOG_TAG, "Requested release; uuid=%s", uuid_str);
 
 	return 0;
 }
@@ -235,14 +235,14 @@ int cl_ble_lock_svc_init(void)
 	int ret = ble_gatts_count_cfg(cl_ble_lock_svc_def);
 	if (ret != ESP_OK)
 	{
-		ESP_LOGE(LOG_TAG, "Failed GATT config: %d", ret);
+		ESP_LOGE(LOG_TAG, "Failed GATT config; ret=%d", ret);
 		return ret;
 	}
 
 	ret = ble_gatts_add_svcs(cl_ble_lock_svc_def);
 	if (ret != ESP_OK)
 	{
-		ESP_LOGE(LOG_TAG, "Failed to add GATT service: %d", ret);
+		ESP_LOGE(LOG_TAG, "Failed to add GATT service; ret=%d", ret);
 		return ret;
 	}
 

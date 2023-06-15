@@ -5,7 +5,7 @@
 
 #include "step_motor.h"
 
-static const char *LOG_TAG = "STEP_MOTOR";
+static const char *LOG_TAG = "step_motor";
 
 static const uint8_t STEP_MATRIX[4][4] = {
 		{1, 1, 0, 0},
@@ -26,7 +26,7 @@ esp_err_t step_motor_init()
 	gpio_set_direction(STEP_DRIVER_PIN_IN3, GPIO_MODE_OUTPUT);
 	gpio_set_direction(STEP_DRIVER_PIN_IN4, GPIO_MODE_OUTPUT);
 
-	ESP_LOGD(LOG_TAG, "%s GPIO pins initialized", __func__);
+	ESP_LOGD(LOG_TAG, "GPIO pins initialized");
 
 	return ESP_OK;
 }

@@ -14,7 +14,7 @@
 #include "cl_ble_svc.h"
 #include "cl_phy_lock_svc.h"
 
-static const char *LOG_TAG = "MAIN";
+static const char *LOG_TAG = "main";
 
 void app_main(void)
 {
@@ -31,42 +31,42 @@ void app_main(void)
 	}
 	if (ret != ESP_OK)
 	{
-		ESP_LOGE(LOG_TAG, "%s Failed to init nvs %s", __func__, esp_err_to_name(ret));
+		ESP_LOGE(LOG_TAG, "Failed to init nvs %s", esp_err_to_name(ret));
 		return;
 	}
-	ESP_LOGI(LOG_TAG, "%s NVS flash initialized", __func__);
+	ESP_LOGI(LOG_TAG, "NVS flash initialized");
 
 	// Initialize the GPIO interrupt service.
 	ret = gpio_install_isr_service(ESP_INTR_FLAG_LOWMED | ESP_INTR_FLAG_SHARED);
 	if (ret != ESP_OK)
 	{
-		ESP_LOGE(LOG_TAG, "%s Failed to install GPIO isr service %s", __func__, esp_err_to_name(ret));
+		ESP_LOGE(LOG_TAG, "Failed to install GPIO isr service %s", esp_err_to_name(ret));
 		return;
 	}
-	ESP_LOGI(LOG_TAG, "%s GPIO isr service installed", __func__);
+	ESP_LOGI(LOG_TAG, "GPIO isr service installed");
 
 	// Initialize the physical lock.
 	ret = cl_phy_lock_svc_init();
 	if (ret != ESP_OK)
 	{
-		ESP_LOGE(LOG_TAG, "%s Failed to init physical lock %s", __func__, esp_err_to_name(ret));
+		ESP_LOGE(LOG_TAG, "Failed to init physical lock %s", esp_err_to_name(ret));
 		return;
 	}
-	ESP_LOGI(LOG_TAG, "%s Physical lock initialized", __func__);
+	ESP_LOGI(LOG_TAG, "Physical lock initialized");
 
 	// Initialize the BLE service.
 	ret = cl_ble_svc_init();
 	if (ret != ESP_OK)
 	{
-		ESP_LOGE(LOG_TAG, "%s BLE init failed %s", __func__, esp_err_to_name(ret));
+		ESP_LOGE(LOG_TAG, "BLE init failed %s", esp_err_to_name(ret));
 		return;
 	}
-	ESP_LOGI(LOG_TAG, "%s BLE init success", __func__);
+	ESP_LOGI(LOG_TAG, "BLE init success");
 
 	// ret = ble_test();
 	// if (ret != ESP_OK)
 	// {
-	// 	ESP_LOGE(LOG_TAG, "%s BLE test failed %s", __func__, esp_err_to_name(ret));
+	// 	ESP_LOGE(LOG_TAG, "BLE test failed %s", esp_err_to_name(ret));
 	// 	return;
 	// }
 
@@ -74,7 +74,7 @@ void app_main(void)
 	// ret = cl_phy_lock_svc_request_release(example_lock_owner);
 	// if (ret != ESP_OK)
 	// {
-	// 	ESP_LOGE(LOG_TAG, "%s Failed to request: %s", __func__, esp_err_to_name(ret));
+	// 	ESP_LOGE(LOG_TAG, "Failed to request: %s", esp_err_to_name(ret));
 	// 	return;
 	// }
 }
