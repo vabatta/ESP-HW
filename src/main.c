@@ -10,6 +10,7 @@
 #include "driver/gpio.h"
 #include "nvs_flash.h"
 // Local
+#include "device_info.h"
 #include "cl_ble_svc.h"
 #include "cl_phy_lock_svc.h"
 
@@ -18,6 +19,8 @@ static const char *LOG_TAG = "MAIN";
 void app_main(void)
 {
 	esp_err_t ret;
+
+	print_device_info();
 
 	// Initialize NVS flash memory.
 	ret = nvs_flash_init();

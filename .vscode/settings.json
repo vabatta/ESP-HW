@@ -45,7 +45,11 @@
 		"esp_types.h": "c",
 		"ble_hs_mbuf.h": "c",
 		"cl_ble_lock_svc.h": "c",
-		"hci_common.h": "c"
+		"hci_common.h": "c",
+		"esp_system.h": "c",
+		"esp_idf_version.h": "c",
+		"esp_cpu.h": "c",
+		"esp_timer.h": "c"
 	},
 	"C_Cpp.errorSquiggles": "enabled"
 }
