@@ -13,9 +13,12 @@
 #include "cl_ble_svc.h"
 #include "gatts/cl_ble_lock_svc.h"
 
+// -- INTERNAL FUNCTIONS --
+void ble_advertise(void);
+
+// -- RUNTIME VARIABLES
 static const char *LOG_TAG = "blesvc";
 
-void ble_advertise(void);
 uint8_t own_addr_type;
 
 int ble_gap_event(struct ble_gap_event *event, void *arg)
@@ -30,13 +33,6 @@ int ble_gap_event(struct ble_gap_event *event, void *arg)
 		ESP_LOGI(LOG_TAG, "connection %s; status=%d ",
 						 event->connect.status == 0 ? "established" : "failed",
 						 event->connect.status);
-		// if (event->connect.status == 0)
-		// {
-		// 	ret = ble_gap_conn_find(event->connect.conn_handle, &desc);
-		// 	assert(ret == 0);
-		// 	// bleprph_print_conn_desc(&desc);
-		// }
-
 		if (event->connect.status != 0)
 		{
 			// Connection has failed, resume advertising.
@@ -46,7 +42,6 @@ int ble_gap_event(struct ble_gap_event *event, void *arg)
 
 	case BLE_GAP_EVENT_DISCONNECT:
 		ESP_LOGI(LOG_TAG, "disconnect; reason=%d ", event->disconnect.reason);
-		// bleprph_print_conn_desc(&event->disconnect.conn);
 		// Connection was terminated, resume advertising.
 		ble_advertise();
 		return 0;
@@ -60,17 +55,11 @@ int ble_gap_event(struct ble_gap_event *event, void *arg)
 	case BLE_GAP_EVENT_CONN_UPDATE:
 		/* The central has updated the connection parameters. */
 		ESP_LOGI(LOG_TAG, "connection updated; status=%d ", event->conn_update.status);
-		// ret = ble_gap_conn_find(event->conn_update.conn_handle, &desc);
-		// assert(ret == 0);
-		// bleprph_print_conn_desc(&desc);
 		return 0;
 
 	case BLE_GAP_EVENT_ENC_CHANGE:
 		/* Encryption has been enabled or disabled for this connection. */
 		ESP_LOGI(LOG_TAG, "encryption change event; status=%d ", event->enc_change.status);
-		// ret = ble_gap_conn_find(event->enc_change.conn_handle, &desc);
-		// assert(ret == 0);
-		// bleprph_print_conn_desc(&desc);
 		return 0;
 
 	case BLE_GAP_EVENT_NOTIFY_TX:

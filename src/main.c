@@ -14,6 +14,7 @@
 #include "cl_ble_svc.h"
 #include "cl_phy_lock_svc.h"
 
+// -- RUNTIME VARIABLES --
 static const char *LOG_TAG = "main";
 
 void app_main(void)
@@ -31,7 +32,7 @@ void app_main(void)
 	}
 	if (ret != ESP_OK)
 	{
-		ESP_LOGE(LOG_TAG, "Failed to init nvs %s", esp_err_to_name(ret));
+		ESP_LOGE(LOG_TAG, "Failed to init nvs; ret=%s", esp_err_to_name(ret));
 		return;
 	}
 	ESP_LOGI(LOG_TAG, "NVS flash initialized");
@@ -40,7 +41,7 @@ void app_main(void)
 	ret = gpio_install_isr_service(ESP_INTR_FLAG_LOWMED | ESP_INTR_FLAG_SHARED);
 	if (ret != ESP_OK)
 	{
-		ESP_LOGE(LOG_TAG, "Failed to install GPIO isr service %s", esp_err_to_name(ret));
+		ESP_LOGE(LOG_TAG, "Failed to install GPIO isr service; ret=%s", esp_err_to_name(ret));
 		return;
 	}
 	ESP_LOGI(LOG_TAG, "GPIO isr service installed");
@@ -49,7 +50,7 @@ void app_main(void)
 	ret = cl_phy_lock_svc_init();
 	if (ret != ESP_OK)
 	{
-		ESP_LOGE(LOG_TAG, "Failed to init physical lock %s", esp_err_to_name(ret));
+		ESP_LOGE(LOG_TAG, "Failed to init physical lock; ret=%s", esp_err_to_name(ret));
 		return;
 	}
 	ESP_LOGI(LOG_TAG, "Physical lock initialized");
@@ -58,23 +59,8 @@ void app_main(void)
 	ret = cl_ble_svc_init();
 	if (ret != ESP_OK)
 	{
-		ESP_LOGE(LOG_TAG, "BLE init failed %s", esp_err_to_name(ret));
+		ESP_LOGE(LOG_TAG, "BLE init failed; ret=%s", esp_err_to_name(ret));
 		return;
 	}
 	ESP_LOGI(LOG_TAG, "BLE init success");
-
-	// ret = ble_test();
-	// if (ret != ESP_OK)
-	// {
-	// 	ESP_LOGE(LOG_TAG, "BLE test failed %s", esp_err_to_name(ret));
-	// 	return;
-	// }
-
-	// uint8_t example_lock_owner[16] = {0x11, 0x11, 0x11, 0x11, 0x11, 0x11, 0x11, 0x11, 0x11, 0x11, 0x11, 0x11, 0x11, 0x11, 0x11, 0x11};
-	// ret = cl_phy_lock_svc_request_release(example_lock_owner);
-	// if (ret != ESP_OK)
-	// {
-	// 	ESP_LOGE(LOG_TAG, "Failed to request: %s", esp_err_to_name(ret));
-	// 	return;
-	// }
 }

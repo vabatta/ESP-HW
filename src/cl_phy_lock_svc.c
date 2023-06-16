@@ -11,7 +11,6 @@
 // Local
 #include "utils.h"
 #include "cl_phy_lock_svc.h"
-#include "step_motor.h"
 
 // -- DEFINES --
 #define NVS_OWNER_NAMESPACE "LSVCO"					 //<! Lock Service Owner namespace used in NVS
@@ -26,7 +25,7 @@
 // -- INTERNAL FUNCTION DECLARATIONS --
 static void gpio_isr_handler(void *arg);
 static void process_gpio_queue(void *arg);
-static void set_state(uint8_t state);
+static inline void set_state(uint8_t state);
 static void set_physical_lock_open(void);
 static void set_physical_lock_closed(void);
 static void set_alarm_on(void);
@@ -36,7 +35,7 @@ static esp_err_t load_ownership(uint8_t *uuid);
 static esp_err_t save_ownership(const uint8_t *uuid);
 static esp_err_t load_state(uint8_t *state);
 static esp_err_t save_state(const uint8_t state);
-static uint8_t is_null_uuid(const uint8_t *uuid);
+static inline uint8_t is_null_uuid(const uint8_t *uuid);
 
 // -- RUNTIME VARIABLES --
 static const char *LOG_TAG = "physvc_lock";
@@ -55,8 +54,7 @@ int cl_phy_lock_svc_init()
 		return ESP_ERR_INVALID_STATE;
 	}
 
-	step_motor_init();
-	ESP_LOGD(LOG_TAG, "%s Step motor initialized", __func__);
+	// TODO init servo
 
 	// Lock sensor out
 	gpio_reset_pin(LOCK_SENSOR_OUT_PIN);
@@ -179,7 +177,13 @@ esp_err_t cl_phy_lock_svc_request_release(uint8_t *uuid)
 	return ESP_ERR_INVALID_STATE;
 }
 
-static void set_state(uint8_t state)
+/**
+ * @internal
+ * @brief Sets the state of the lock.
+ *
+ * @param state The new state of the lock.
+ */
+static inline void set_state(uint8_t state)
 {
 	ESP_LOGD(LOG_TAG, "%s State changed from %d -> %d", __func__, current_state, state);
 	current_state = state;
@@ -192,8 +196,7 @@ static void set_state(uint8_t state)
  */
 static void set_physical_lock_open()
 {
-	ESP_LOGD(LOG_TAG, "%s Moving step motor by 90", __func__);
-	step_motor_angle(90);
+	ESP_LOGD(LOG_TAG, "%s set lock open", __func__);
 }
 
 /**
@@ -203,8 +206,7 @@ static void set_physical_lock_open()
  */
 static void set_physical_lock_closed()
 {
-	ESP_LOGD(LOG_TAG, "%s Moving step motor by -90", __func__);
-	step_motor_angle(-90);
+	ESP_LOGD(LOG_TAG, "%s set lock closed", __func__);
 }
 
 /**
@@ -399,7 +401,7 @@ static esp_err_t load_ownership(uint8_t *uuid)
  * @internal
  * @brief Returns 0 if the given uuid is the null uuid.
  */
-static uint8_t is_null_uuid(const uint8_t *uuid)
+static inline uint8_t is_null_uuid(const uint8_t *uuid)
 {
 	return memcmp(uuid, null_owner, 16) != 0;
 }
