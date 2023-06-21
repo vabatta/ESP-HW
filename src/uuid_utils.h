@@ -10,7 +10,7 @@
  * @param bytes The byte array to store the converted UUID.
  * @param reverse_order Whether to reverse the order of the bytes.
  *
- * @return 0 on success, others on failure.
+ * @return 0 on success, others if not a valid uuid-128.
  */
 extern int convert_uuid_to_bytes(const char *uuid_string, uint8_t *bytes, uint8_t reverse_order);
 

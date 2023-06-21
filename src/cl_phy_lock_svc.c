@@ -9,7 +9,7 @@
 #include "esp_log.h"
 #include "nvs.h"
 // Local
-#include "utils.h"
+#include "stringify.h"
 #include "cl_phy_lock_svc.h"
 
 // -- DEFINES --

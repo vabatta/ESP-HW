@@ -1,6 +1,6 @@
 // ESP32 and utils
 #include "esp_log.h"
-#include "utils.h"
+#include "stringify.h"
 // Bluetooth host stack
 #include "nimble/nimble_port.h"
 #include "nimble/nimble_port_freertos.h"

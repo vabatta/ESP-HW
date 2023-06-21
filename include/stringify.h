@@ -1,3 +1,5 @@
+#pragma once
+
 #define UUID_TO_STRING(uuid)                                                              \
 	({                                                                                      \
 		char uuid_str[37];                                                                    \
