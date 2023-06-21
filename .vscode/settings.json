@@ -49,7 +49,11 @@
 		"esp_system.h": "c",
 		"esp_idf_version.h": "c",
 		"esp_cpu.h": "c",
-		"esp_timer.h": "c"
+		"esp_timer.h": "c",
+		"iot_servo.h": "c",
+		"i2c.h": "c",
+		"axp2101_lib.h": "c",
+		"nvs.h": "c"
 	},
 	"C_Cpp.errorSquiggles": "enabled"
 }
